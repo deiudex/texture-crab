@@ -27,7 +27,6 @@ unsafe fn load_image(file_path: PathBuf) -> Option<ffi::Image> {
 
 unsafe fn get_available_textures() -> Vec<structs::ImageFromFile> {
     let texture_path_live: &Path = Path::new(TEXTURE_PATH);
-
     let mut textures_by_file = vec![];
     if texture_path_live.is_dir() {
         for entry in texture_path_live
@@ -51,8 +50,10 @@ unsafe fn get_available_textures() -> Vec<structs::ImageFromFile> {
     return textures_by_file;
 }
 
-pub unsafe fn test_texture_grabbing() {
-    get_available_textures();
+pub fn test_texture_grabbing() {
+    unsafe {
+        get_available_textures();
+    }
 }
 
 pub fn compose_overlay(rl: RaylibHandle) {}
