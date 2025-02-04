@@ -1,4 +1,4 @@
-use raylib::ffi::*;
+use raylib::texture::Image;
 use std::path::PathBuf;
 
 pub struct ImageFromFile {
