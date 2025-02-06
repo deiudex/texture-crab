@@ -1,6 +1,8 @@
 use raylib::core::texture::Image;
 use std::path::Path;
 use std::path::PathBuf;
+use structs::ComponentUpdateAction;
+use structs::ComponentUpdateInstruction;
 
 pub mod structs;
 
@@ -12,7 +14,14 @@ fn load_image_from_file(file_path: PathBuf) -> Option<Image> {
     return Some(image.unwrap());
 }
 
-pub fn get_available_textures() -> Vec<structs::ImageFromFile> {
+pub fn get_available_textures(
+    state: &structs::ComponentState,
+) -> ComponentUpdateInstruction<structs::ImageFromFile> {
+    let mut instruction: ComponentUpdateInstruction<structs::ImageFromFile> =
+        ComponentUpdateInstruction::new();
+    if !matches!(state.read_status, structs::TextureReadState::Untouched) {
+        return instruction;
+    }
     let texture_path_live: &Path = Path::new(TEXTURE_PATH);
     let mut textures_by_file = vec![];
     if texture_path_live.is_dir() {
@@ -26,10 +35,11 @@ pub fn get_available_textures() -> Vec<structs::ImageFromFile> {
                     });
                 }
             }
+            instruction.action = ComponentUpdateAction::Add;
+            instruction.items = textures_by_file;
         }
     } else {
         println!("Could not read directory {:?}.", TEXTURE_PATH);
     }
-
-    return textures_by_file;
+    return instruction;
 }
