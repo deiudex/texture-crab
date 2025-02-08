@@ -1,4 +1,4 @@
-use raylib::texture::Image;
+use raylib::texture::{Image, RenderTexture2D};
 use std::path::PathBuf;
 
 pub struct ImageFromFile {
@@ -18,6 +18,7 @@ pub struct IntRectangle {
 }
 
 pub struct ComponentState {
+    pub canvases: Vec<RenderTexture2D>,
     pub read_status: TextureReadState,
     pub textures: Vec<ImageFromFile>,
 }
@@ -25,20 +26,32 @@ pub struct ComponentState {
 impl ComponentState {
     pub fn init() -> ComponentState {
         return ComponentState {
+            canvases: vec![],
             read_status: TextureReadState::Untouched,
             textures: vec![],
         };
     }
-    fn update_read_status(&mut self, s: TextureReadState) {
-        self.read_status = s;
-    }
-    pub fn add_textures(&mut self, textures: Vec<ImageFromFile>) {
-        self.textures = textures;
-    }
-    pub fn update(&mut self, i: ComponentUpdateInstruction<ImageFromFile>) {
+    pub fn update_textures(&mut self, i: ComponentUpdateInstruction<ImageFromFile>) {
         if matches!(i.action, ComponentUpdateAction::Add) {
-            self.update_read_status(TextureReadState::Readable);
-            self.add_textures(i.items);
+            self.read_status = TextureReadState::Readable;
+            self.textures = i.items;
+        } else {
+            self.read_status = TextureReadState::Empty;
+        }
+    }
+    pub fn update_canvases(&mut self, i: ComponentUpdateInstruction<RenderTexture2D>) {
+        match i.action {
+            ComponentUpdateAction::Add => {
+                for c in i.items {
+                    self.canvases.push(c);
+                }
+            },
+            ComponentUpdateAction::Remove => {
+                for c in i.items {
+                    self.canvases.swap_remove(self.canvases.iter().position(|v| *v == c).unwrap());
+                }
+            },
+            _ => println!("An unknown update-component \"{:?}\" action was passed to the canvases... ignoring.", i.action),
         }
     }
 }
@@ -51,6 +64,7 @@ pub enum TextureReadState {
 }
 
 pub enum ComponentUpdateAction {
+    FAILURE,
     Blank,
     Create,
     Add,
