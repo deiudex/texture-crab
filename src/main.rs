@@ -1,6 +1,7 @@
 use raylib::prelude::*;
 
 pub mod components;
+pub mod helpers;
 pub mod shapes;
 
 fn main() {
@@ -14,7 +15,6 @@ fn main() {
         component_state.update_textures(instructions);
         let mut d = rl.begin_drawing(&thread);
         d.clear_background(Color::WHITE);
-        d.draw_text("Crab Windows", width / 2, 75, 20, Color::BLACK);
         shapes::render_main_screen_shapes(d, &component_state.textures);
     }
 }

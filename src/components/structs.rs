@@ -1,9 +1,30 @@
-use raylib::texture::{Image, RenderTexture2D};
+use raylib::{color::Color, texture::{Image, RenderTexture2D}};
 use std::path::PathBuf;
 
 pub struct ImageFromFile {
     pub name: String,
     pub image: Option<Image>,
+}
+
+pub struct TextureBar {
+    pub main_bar: raylib::core::math::Rectangle,
+    pub color: Color,
+    pub texture_labels: Vec<String>,
+}
+
+impl TextureBar {
+    pub fn init(x: f32, y: f32, w: f32, h: f32, t: Vec<String>) -> TextureBar {
+        return TextureBar {
+            main_bar: raylib::core::math::Rectangle{
+             x: x,
+             y: y,
+             width: w,
+             height: h,
+        },
+            color: Color::DARKGOLDENROD,
+            texture_labels: t,
+        }
+    }
 }
 
 pub struct OwnedPath {
@@ -18,7 +39,6 @@ pub struct IntRectangle {
 }
 
 pub struct ComponentState {
-    pub canvases: Vec<RenderTexture2D>,
     pub read_status: TextureReadState,
     pub textures: Vec<ImageFromFile>,
 }
@@ -26,7 +46,6 @@ pub struct ComponentState {
 impl ComponentState {
     pub fn init() -> ComponentState {
         return ComponentState {
-            canvases: vec![],
             read_status: TextureReadState::Untouched,
             textures: vec![],
         };
@@ -37,21 +56,6 @@ impl ComponentState {
             self.textures = i.items;
         } else {
             self.read_status = TextureReadState::Empty;
-        }
-    }
-    pub fn update_canvases(&mut self, i: ComponentUpdateInstruction<RenderTexture2D>) {
-        match i.action {
-            ComponentUpdateAction::Add => {
-                for c in i.items {
-                    self.canvases.push(c);
-                }
-            },
-            ComponentUpdateAction::Remove => {
-                for c in i.items {
-                    self.canvases.swap_remove(self.canvases.iter().position(|v| *v == c).unwrap());
-                }
-            },
-            _ => println!("An unknown update-component \"{:?}\" action was passed to the canvases... ignoring.", i.action),
         }
     }
 }
