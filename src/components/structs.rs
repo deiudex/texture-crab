@@ -38,9 +38,16 @@ pub struct IntRectangle {
     pub height: i32,
 }
 
+pub enum ComponentSpace {
+    Main,
+    Edit,
+    Settings,
+} 
+
 pub struct ComponentState {
     pub read_status: TextureReadState,
     pub textures: Vec<ImageFromFile>,
+    pub comp_space: ComponentSpace,
 }
 
 impl ComponentState {
@@ -48,6 +55,7 @@ impl ComponentState {
         return ComponentState {
             read_status: TextureReadState::Untouched,
             textures: vec![],
+            comp_space: ComponentSpace::Main,
         };
     }
     pub fn update_textures(&mut self, i: ComponentUpdateInstruction<ImageFromFile>) {

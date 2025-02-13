@@ -1,5 +1,5 @@
 [package]
-name = "crab-windows"
+name = "Texture Crab"
 authors = ["Evan Kamuf"]
 version = "0.0.1"
 edition = "2021"
@@ -7,4 +7,4 @@ description = "Author's introductory works with the Rust language."
 
 [dependencies]
 raylib = { version = "5.0" }
-tetra = { version = "0.8" }
+egui-file-dialog = { version = "0.9" }
