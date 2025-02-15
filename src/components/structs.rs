@@ -66,6 +66,14 @@ impl ComponentState {
             self.read_status = TextureReadState::Empty;
         }
     }
+    pub fn update_space(&mut self, s: ComponentUpdateInstruction<ComponentSpace>) {
+           if s.items.len() == 0 {
+            println!("EMPTY SPACE CHANGE - RESETTING TO MAIN");
+            self.comp_space = ComponentSpace::Main;
+            return;
+           }
+           self.comp_space = s.items[0];
+    }
 }
 
 pub enum TextureReadState {
@@ -80,6 +88,7 @@ pub enum ComponentUpdateAction {
     Blank,
     Create,
     Add,
+    Change,
     Remove,
     Delete,
 }
