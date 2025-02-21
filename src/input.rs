@@ -1,6 +1,6 @@
 use crate::components::structs::*;
-use crate::input::*;
 use raylib::prelude::*;
+
 pub fn handle_main_input(
     h: &RaylibHandle,
 ) -> Option<ComponentUpdateInstruction<ComponentUpdateAction>> {
