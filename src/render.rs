@@ -1,8 +1,12 @@
 use crate::components::structs::*;
 use raylib::prelude::*;
 
+pub mod home;
 
-pub fn render(dh: RaylibDrawHandle, component_state: &ComponentState) -> Option<ComponentUpdateInstruction<ComponentSpace>> {
+pub fn render(
+    dh: RaylibDrawHandle,
+    component_state: &ComponentState,
+) -> Option<ComponentUpdateInstruction<ComponentSpace>> {
     match component_state.comp_space {
         /*Once main is left, you can't really get back contextually.
         But all main 'func' should be invokable within edit.
@@ -13,17 +17,17 @@ pub fn render(dh: RaylibDrawHandle, component_state: &ComponentState) -> Option<
             2. Render a section to load a project.
             3. Render a section to load recent proejcts.
             */
-        },
+        }
         ComponentSpace::Edit => {
             //Main Project editor.
-        },
-        ComponentSpace::Settings => {
-
-        },
-        _ => {
+        }
+        ComponentSpace::Settings => {}
+        ComponentSpace::None => {
             /* No one should get here */
             /* Reset to Main for now */
-            let mut instruction: ComponentUpdateInstruction<ComponentSpace> = ComponentUpdateInstruction::new();
+            println!("ComponentSpace::None detected in render!");
+            let mut instruction: ComponentUpdateInstruction<ComponentSpace> =
+                ComponentUpdateInstruction::new();
             instruction.action = ComponentUpdateAction::Change;
             Some(instruction.items.push(ComponentSpace::Main));
         }

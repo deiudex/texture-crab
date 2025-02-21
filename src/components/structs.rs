@@ -1,4 +1,8 @@
-use raylib::{color::Color, texture::{Image, RenderTexture2D}};
+use egui_file_dialog::*;
+use raylib::{
+    color::Color,
+    texture::{Image, RenderTexture2D},
+};
 use std::path::PathBuf;
 
 pub struct ImageFromFile {
@@ -15,15 +19,15 @@ pub struct TextureBar {
 impl TextureBar {
     pub fn init(x: f32, y: f32, w: f32, h: f32, t: Vec<String>) -> TextureBar {
         return TextureBar {
-            main_bar: raylib::core::math::Rectangle{
-             x: x,
-             y: y,
-             width: w,
-             height: h,
-        },
+            main_bar: raylib::core::math::Rectangle {
+                x: x,
+                y: y,
+                width: w,
+                height: h,
+            },
             color: Color::DARKGOLDENROD,
             texture_labels: t,
-        }
+        };
     }
 }
 
@@ -42,12 +46,14 @@ pub enum ComponentSpace {
     Main,
     Edit,
     Settings,
-} 
+    None,
+}
 
 pub struct ComponentState {
     pub read_status: TextureReadState,
     pub textures: Vec<ImageFromFile>,
     pub comp_space: ComponentSpace,
+    pub file_dialog: FileDialog,
 }
 
 impl ComponentState {
@@ -56,6 +62,7 @@ impl ComponentState {
             read_status: TextureReadState::Untouched,
             textures: vec![],
             comp_space: ComponentSpace::Main,
+            file_dialog: FileDialog::new(),
         };
     }
     pub fn update_textures(&mut self, i: ComponentUpdateInstruction<ImageFromFile>) {
@@ -67,12 +74,12 @@ impl ComponentState {
         }
     }
     pub fn update_space(&mut self, s: ComponentUpdateInstruction<ComponentSpace>) {
-           if s.items.len() == 0 {
+        if let ComponentSpace::None = s.space {
             println!("EMPTY SPACE CHANGE - RESETTING TO MAIN");
             self.comp_space = ComponentSpace::Main;
             return;
-           }
-           self.comp_space = s.items[0];
+        }
+        self.comp_space = s.space;
     }
 }
 
@@ -85,10 +92,11 @@ pub enum TextureReadState {
 
 pub enum ComponentUpdateAction {
     FAILURE,
-    Blank,
-    Create,
     Add,
+    Blank,
     Change,
+    Create,
+    DialogFile,
     Remove,
     Delete,
 }
@@ -96,6 +104,7 @@ pub enum ComponentUpdateAction {
 pub struct ComponentUpdateInstruction<T> {
     pub action: ComponentUpdateAction,
     pub items: Vec<T>,
+    pub space: ComponentSpace,
 }
 
 impl<T> ComponentUpdateInstruction<T> {
@@ -103,6 +112,7 @@ impl<T> ComponentUpdateInstruction<T> {
         Self {
             action: ComponentUpdateAction::Blank,
             items: Vec::new(),
+            space: ComponentSpace::None,
         }
     }
 }

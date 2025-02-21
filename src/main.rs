@@ -1,9 +1,12 @@
+use crate::components::spaces::*;
+use crate::components::structs::*;
 use raylib::prelude::*;
 
 pub mod components;
 pub mod helpers;
-pub mod shapes;
+pub mod input;
 pub mod render;
+pub mod shapes;
 
 fn main() {
     let (mut rl, thread) = raylib::init()
@@ -11,7 +14,7 @@ fn main() {
         .resizable()
         .title("Texture Crab")
         .build();
-    let mut component_state = components::structs::ComponentState::init();
+    let mut component_state = ComponentState::init();
     let width: i32 = get_monitor_width(get_current_monitor()) / 2;
     let height: i32 = get_monitor_height(get_current_monitor()) / 2;
     rl.set_window_size(width, height);
@@ -25,7 +28,7 @@ fn main() {
         if instruct.is_some() {
             component_state.update_space(instruct.unwrap());
         }
+
         //shapes::render_main_screen_shapes(d, &component_state.textures);
     }
 }
-

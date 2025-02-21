@@ -4,6 +4,7 @@ use std::path::PathBuf;
 use structs::ComponentUpdateAction;
 use structs::ComponentUpdateInstruction;
 
+pub mod spaces;
 pub mod structs;
 
 //const TEXTURE_PATH: &str = "../../textures";
