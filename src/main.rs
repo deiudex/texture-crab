@@ -32,4 +32,23 @@ fn main() {
 
         //shapes::render_main_screen_shapes(d, &component_state.textures);
     }
+    #[cfg(test)]
+    mod tests{
+        use raylib::RaylibThread;
+
+        #[test]
+        fn test() {
+            println!("Test 'build Raylib window'.");
+            let (mut h, t) = test_window_init();
+            println!("Test draw on window.");
+            rl.begin_drawing(&t);
+        }
+        fn test_window_init() -> (RaylibHandle, RaylibThread) {
+            return raylib::init()
+            .size(1280, 720)
+            .resizable()
+            .title("Texture Crab")
+            .build();
+        }
+    }
 }
