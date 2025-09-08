@@ -19,7 +19,7 @@ jobs:
     - name: Get libx11
       run: sudo apt-get install libx11-dev
     - name: Get libxrandr
-      run: sudo apt-get install libxrandr
+      run: sudo apt-get install libxrandr-dev
     - name: Build
       run: cargo build --verbose
     #- name: Run tests
