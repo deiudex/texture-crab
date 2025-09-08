@@ -1,4 +1,5 @@
 use raylib::prelude::*;
+use crate::components::structs::*;
 
 pub mod edit;
 pub mod home;
@@ -6,7 +7,7 @@ pub mod settings;
 
 pub struct ScreenSpace {
     pub layout: KeyLayout,
-    pub elements: Vec<ScreenElement>,
+    pub elements: Vec<ScreenElement>
 }
 
 pub struct KeyLayout {
@@ -15,7 +16,8 @@ pub struct KeyLayout {
 
 impl KeyLayout {
     pub fn init(v: Vec<KeyboardKey>) -> KeyLayout {
-        return KeyLayout { ray_keys: vec![] };
+        //return KeyLayout { ray_keys: vec![] };
+        return KeyLayout { ray_keys: v }
     }
 }
 
@@ -29,6 +31,15 @@ impl ScreenElement {
         return ScreenElement {
             name: n,
             render_method: f,
+        };
+    }
+}
+
+impl ScreenSpace {
+    pub fn init(l: KeyLayout, e: Vec<ScreenElement>) -> ScreenSpace {
+        return ScreenSpace {
+            layout: l,
+            elements: e
         };
     }
 }

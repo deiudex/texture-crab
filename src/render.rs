@@ -1,9 +1,9 @@
-use crate::components::structs::*;
+use crate::components::{spaces::{self, ScreenSpace}, structs::*};
 use raylib::prelude::*;
 
 pub mod home;
 
-pub fn render(
+pub fn listen(
     dh: RaylibDrawHandle,
     component_state: &ComponentState,
 ) -> Option<ComponentUpdateInstruction<ComponentSpace>> {
@@ -12,14 +12,9 @@ pub fn render(
         But all main 'func' should be invokable within edit.
         */
         ComponentSpace::Main => {
-            /*
-            1. Render a section to create a project.
-            2. Render a section to load a project.
-            3. Render a section to load recent proejcts.
-            */
+            
         }
         ComponentSpace::Edit => {
-            //Main Project editor.
         }
         ComponentSpace::Settings => {}
         ComponentSpace::None => {
@@ -34,3 +29,6 @@ pub fn render(
     };
     return None;
 }
+
+pub fn render(mut rh: RaylibHandle, t: &RaylibThread, state: ComponentState) {
+} 

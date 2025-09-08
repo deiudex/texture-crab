@@ -49,9 +49,9 @@ pub fn render_main_screen_shapes(mut draw_handle: RaylibDrawHandle, textures: &V
     render_texture_helper(draw_handle, textures);
 }
 
-pub fn render_home(s: &ComponentState) -> Option<ComponentUpdateInstruction<ComponentSpace>> {
+pub fn render_home(dh: RaylibDrawHandle<'_>, s: &ComponentState) -> Option<ComponentUpdateInstruction<ComponentSpace>> {
     //render/draw
-
+        render_main_screen_shapes(dh, &s.textures);
     //return none for now
     return None;
 }

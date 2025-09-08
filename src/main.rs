@@ -18,13 +18,14 @@ fn main() {
     let width: i32 = get_monitor_width(get_current_monitor()) / 2;
     let height: i32 = get_monitor_height(get_current_monitor()) / 2;
     rl.set_window_size(width, height);
-    //let instructions = components::get_available_textures(&component_state);
-    //component_state.update_textures(instructions);
+    let instructions = components::get_available_textures(&component_state);
+    component_state.update_textures(instructions);
 
     while !rl.window_should_close() {
         let mut d = rl.begin_drawing(&thread);
         d.clear_background(Color::WHITE);
-        let instruct = render::render(d, &component_state);
+        //plug into home-render for now
+        let instruct = crate::render::home::render_home(d, &component_state);
         if instruct.is_some() {
             component_state.update_space(instruct.unwrap());
         }
