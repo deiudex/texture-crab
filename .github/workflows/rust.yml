@@ -18,7 +18,10 @@ jobs:
     - uses: actions/checkout@v4
     - name: Get X11
       # https://www.glfw.org/docs/3.3/compile.html#compile_deps_x11
-      run: sudo apt-get install xorg-dev
+      run: |
+        sudo apt-get update
+        sudo apt-get install mesa-common-dev
+        sudo apt-get install xorg-dev
     - name: Build
       run: cargo build --verbose
     #- name: Run tests
