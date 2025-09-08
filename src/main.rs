@@ -34,14 +34,14 @@ fn main() {
     }
     #[cfg(test)]
     mod tests{
-        use raylib::RaylibThread;
+        use raylib::prelude::*;
 
         #[test]
         fn test() {
             println!("Test 'build Raylib window'.");
             let (mut h, t) = test_window_init();
             println!("Test draw on window.");
-            rl.begin_drawing(&t);
+            h.begin_drawing(&t);
         }
         fn test_window_init() -> (RaylibHandle, RaylibThread) {
             return raylib::init()
