@@ -18,6 +18,8 @@ jobs:
     - uses: actions/checkout@v4
     - name: Get libx11
       run: sudo apt-get install libx11-dev
+    - name: Get libxrandr
+      run: sudo apt-get install libxrandr
     - name: Build
       run: cargo build --verbose
     #- name: Run tests
