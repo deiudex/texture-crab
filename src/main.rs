@@ -33,7 +33,7 @@ fn main() {
         //shapes::render_main_screen_shapes(d, &component_state.textures);
     }
     #[cfg(test)]
-    mod tests{
+    mod test{
         use raylib::prelude::*;
 
         #[test]
