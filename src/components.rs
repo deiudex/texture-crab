@@ -1,48 +1,40 @@
 use raylib::core::texture::Image;
-use std::path::Path;
-use std::path::PathBuf;
-use structs::ComponentUpdateAction;
-use structs::ComponentUpdateInstruction;
+use std::path::{Path, PathBuf};
+use structs::{AppEvent, ImageFromFile, TextureReadState};
 
 pub mod spaces;
 pub mod structs;
 
-//const TEXTURE_PATH: &str = "../../textures";
 const TEXTURE_PATH: &str = "textures";
 
 fn load_image_from_file(file_path: PathBuf) -> Option<Image> {
-    let image = Image::load_image(file_path.to_str().unwrap());
-    return Some(image.unwrap());
+    Image::load_image(file_path.to_str().unwrap()).ok()
 }
 
-pub fn get_available_textures(
-    state: &structs::ComponentState,
-) -> ComponentUpdateInstruction<structs::ImageFromFile> {
-    let mut instruction: ComponentUpdateInstruction<structs::ImageFromFile> =
-        ComponentUpdateInstruction::new();
-    if !matches!(state.read_status, structs::TextureReadState::Untouched) {
-        return instruction;
+pub fn get_available_textures(state: &structs::ComponentState) -> Option<AppEvent> {
+    if !matches!(state.read_status, TextureReadState::Untouched) {
+        return None;
     }
-    let texture_path_live: &Path = Path::new(TEXTURE_PATH);
-    let mut textures_by_file = vec![];
-    if texture_path_live.is_dir() {
-        let entries = std::fs::read_dir(texture_path_live);
-        for entry in entries.unwrap() {
-            if let Ok(entry) = entry {
-                println!("found texture {:?}", entry.path());
-                textures_by_file.push(structs::ImageFromFile {
-                    name: String::from(entry.path().to_str().unwrap()),
-                    image: load_image_from_file(entry.path()),
-                });
-            }
-        }
-        if textures_by_file.len() > 0 {
-            instruction.action = ComponentUpdateAction::Add;
-            instruction.items = textures_by_file;
-        }
-    } else {
+    let texture_path = Path::new(TEXTURE_PATH);
+    if !texture_path.is_dir() {
         println!("Could not read directory {:?}.", TEXTURE_PATH);
-        instruction.action = ComponentUpdateAction::FAILURE;
+        return Some(AppEvent::TexturesEmpty);
     }
-    return instruction;
+    let textures: Vec<ImageFromFile> = std::fs::read_dir(texture_path)
+        .unwrap()
+        .filter_map(|entry| {
+            let entry = entry.ok()?;
+            println!("found texture {:?}", entry.path());
+            Some(ImageFromFile {
+                name: entry.path().to_str().unwrap().to_string(),
+                image: load_image_from_file(entry.path()),
+            })
+        })
+        .collect();
+
+    if textures.is_empty() {
+        Some(AppEvent::TexturesEmpty)
+    } else {
+        Some(AppEvent::TexturesLoaded(textures))
+    }
 }

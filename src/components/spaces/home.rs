@@ -1,5 +1,4 @@
 use crate::components::spaces::*;
-use crate::render::home::*;
 use raylib::prelude::*;
 
 fn get_home_space() -> ScreenSpace {
